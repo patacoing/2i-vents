@@ -81,7 +81,7 @@ fun MyAppNavigation() {
                 eventId = eventId,
                 viewModel = eventsViewModel,
                 onBackClick = { navController.navigateUp() } ,
-                onRegisterClick = { /* Implémentez la logique d'inscription */ }
+                onRegisterClick = eventsViewModel::participateEvent
             )
         }
     }

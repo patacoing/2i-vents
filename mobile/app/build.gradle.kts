@@ -74,5 +74,4 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
     implementation("androidx.compose.material:material-icons-extended:1.7.6")
-
 }

@@ -8,13 +8,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.mobile.models.AuthResponse
 import com.example.mobile.models.User
 import com.example.mobile.repositories.AuthRepository
+import com.example.mobile.repositories.UserRepository
+import com.example.mobile.session.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     var authResponse by mutableStateOf<AuthResponse?>(null)
@@ -32,6 +35,9 @@ class AuthViewModel @Inject constructor(
             errorMessage = null
             try {
                 authResponse = authRepository.login(firstName, lastName, password)
+                SessionManager.access_token = authResponse!!.accessToken
+                SessionManager.refresh_token = authResponse!!.refreshToken
+                SessionManager.currentUser = userRepository.getUserById(authResponse!!.userId.toString())
             } catch (e: Exception) {
                 errorMessage = e.message
             } finally {

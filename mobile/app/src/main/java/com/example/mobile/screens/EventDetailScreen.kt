@@ -15,12 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mobile.models.Event
+import com.example.mobile.models.Participant
+import com.example.mobile.models.User
+import com.example.mobile.session.SessionManager
 import com.example.mobile.viewmodels.EventsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,12 +29,20 @@ import com.example.mobile.viewmodels.EventsViewModel
 fun EventDetailScreen(
     eventId: String,
     onBackClick: () -> Unit,
-    onRegisterClick: () -> Unit,
+    onRegisterClick: (String, String) -> Unit,
     viewModel: EventsViewModel = hiltViewModel()
 ) {
     val event = viewModel.selectedEvent
     val isLoading = viewModel.isLoading
     val error = viewModel.errorMessage
+    val participants = viewModel.participants
+    val organizers = viewModel.organizers
+    val currentUser = SessionManager.currentUser
+
+    var alreadyParticipating = false
+    if (event?.participants?.contains(currentUser!!.id) == true) {
+        alreadyParticipating = true
+    }
 
     LaunchedEffect(eventId) {
         viewModel.loadEventDetail(eventId)
@@ -70,27 +79,39 @@ fun EventDetailScreen(
                         .navigationBarsPadding()  // Pour gérer la barre de navigation système
                 ) {
                     Button(
-                        onClick = { /* TODO: Implémenter l'inscription */ },
+                        onClick = {
+                            if (!alreadyParticipating) {
+                                currentUser!!.id?.let { onRegisterClick(eventId, it) }
+                            }
+                                  },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary
                         ),
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(12.dp),
+                        enabled = !alreadyParticipating
                     ) {
                         Row(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.padding(8.dp)
                         ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Add,
-                                contentDescription = null
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "S'inscrire à l'événement",
-                                style = MaterialTheme.typography.titleMedium
-                            )
+                            if (!alreadyParticipating) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Add,
+                                    contentDescription = null
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "S'inscrire à l'événement",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            } else {
+                                Text(
+                                    text = "Déjà inscrit",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            }
                         }
                     }
                 }
@@ -105,7 +126,7 @@ fun EventDetailScreen(
             when {
                 isLoading -> LoadingState()
                 error != null -> ErrorState(error = error) { viewModel.loadEventDetail(eventId) }
-                event != null -> EventContent(event = event)
+                event != null -> EventContent(event = event, participants = participants, organizers = organizers)
                 else -> EmptyState()
             }
         }
@@ -170,7 +191,7 @@ private fun EmptyState() {
 }
 
 @Composable
-private fun EventContent(event: Event) {
+private fun EventContent(event: Event, participants: List<User>, organizers: List<User>) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -201,12 +222,12 @@ private fun EventContent(event: Event) {
             Spacer(modifier = Modifier.height(24.dp))
 
             // Participants
-            ParticipantsSection(event)
+            ParticipantsSection(event, participants)
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // Organisateurs
-            OrganizersSection(event)
+            OrganizersSection(event, organizers)
         }
     }
 }
@@ -324,23 +345,23 @@ private fun ThemesSection(themes: List<String>) {
 }
 
 @Composable
-private fun ParticipantsSection(event: Event) {
+private fun ParticipantsSection(event: Event, participants: List<User>) {
     SectionTitle(
         icon = Icons.Outlined.Group,
         title = "Participants (${event.participants.size})"
     )
     Spacer(modifier = Modifier.height(8.dp))
-    ParticipantsList(participants = event.participants)
+    ParticipantsList(participants = participants)
 }
 
 @Composable
-private fun OrganizersSection(event: Event) {
+private fun OrganizersSection(event: Event, organizers: List<User>) {
     SectionTitle(
         icon = Icons.Outlined.AdminPanelSettings,
         title = "Organisateurs"
     )
     Spacer(modifier = Modifier.height(8.dp))
-    ParticipantsList(participants = event.organizers)
+    ParticipantsList(participants = organizers)
 }
 
 @Composable
@@ -384,12 +405,12 @@ private fun InfoRow(icon: ImageVector, text: String) {
 }
 
 @Composable
-private fun ParticipantsList(participants: List<String>) {
+private fun ParticipantsList(participants: List<User>) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(participants) { participant ->
-            ParticipantChip(name = participant)
+            ParticipantChip(name = "${participant.firstName} ${participant.lastName}")
         }
     }
 }

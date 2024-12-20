@@ -24,5 +24,6 @@ data class AuthRegisterBody(
 
 data class AuthResponse(
     val accessToken: String,
-    val refreshToken: String
+    val refreshToken: String,
+    val userId: Int
 )

@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mobile.viewmodels.AuthViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
@@ -148,7 +147,7 @@ fun LoginScreen(
     }
 
     LaunchedEffect(authResponse) {
-        authResponse?.let {
+        authResponse?.userId?.let {
             onLoginSuccess()
         }
     }
