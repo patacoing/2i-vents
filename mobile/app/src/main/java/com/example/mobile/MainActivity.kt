@@ -33,22 +33,29 @@ class MainActivity : ComponentActivity() {
 fun MyAppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.SignUp.route) {
-        composable(Screen.SignUp.route) {
+    NavHost(navController = navController, startDestination = Screen.Login.route) {
+        composable(Screen.Login.route) {
             val authViewModel = hiltViewModel<AuthViewModel>()
-            SignUpScreen(
-                onSignUpSuccess = {
-                    navController.navigate(Screen.Login.route)
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(Screen.EventsList.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                },
+                onNavigateToSignUp = {
+                    navController.navigate(Screen.SignUp.route)
                 },
                 viewModel = authViewModel
             )
         }
 
-        composable(Screen.Login.route) {
+        composable(Screen.SignUp.route) {
             val authViewModel = hiltViewModel<AuthViewModel>()
-            LoginScreen(
-                onLoginSuccess = {
-                    navController.navigate(Screen.EventsList.route)
+            SignUpScreen(
+                onSignUpSuccess = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.SignUp.route) { inclusive = true }
+                    }
                 },
                 viewModel = authViewModel
             )
@@ -64,7 +71,8 @@ fun MyAppNavigation() {
             )
         }
 
-        composable(Screen.EventDetail.route,
+        composable(
+            Screen.EventDetail.route,
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) { backStackEntry ->
             val eventsViewModel = hiltViewModel<EventsViewModel>()
