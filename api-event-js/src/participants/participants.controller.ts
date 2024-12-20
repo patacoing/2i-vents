@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ParticipantsService } from './participants.service';
 import { AddParticipantDto } from './dto/add-participant.dto';
 import { UpdateParticipantDto } from './dto/update-participant.dto';
+import { IdParamDto } from 'src/common/dto/id-param.dto';
 
 @Controller('participants')
 export class ParticipantsController {
@@ -13,7 +14,7 @@ export class ParticipantsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.participantsService.remove(+id);
+  findOne(@Param() params: IdParamDto) {
+    return this.participantsService.remove(params.id);
   }
 }

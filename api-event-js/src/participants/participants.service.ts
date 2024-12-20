@@ -8,7 +8,7 @@ export class ParticipantsService {
     return 'This action adds a new participant';
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} participant`;
   }
 }

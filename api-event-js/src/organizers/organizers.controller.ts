@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { OrganizersService } from './organizers.service';
 import { AddOrganizerDto } from './dto/add-organizer.dto';
-import { UpdateOrganizerDto } from './dto/update-organizer.dto';
+import { IdParamDto } from 'src/common/dto/id-param.dto';
 
 @Controller('organizers')
 export class OrganizersController {
@@ -13,7 +13,7 @@ export class OrganizersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.organizersService.remove(+id);
+  findOne(@Param() params: IdParamDto) {
+    return this.organizersService.remove(params.id);
   }
 }
