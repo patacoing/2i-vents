@@ -4,10 +4,14 @@ import { AddParticipantDto } from './dto/add-participant.dto';
 import { EventIdParamDto } from 'src/common/dto/event-id-param.dto';
 import { EventUserIdParamDto } from 'src/common/dto/event-user-id-param.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { KafkaService } from 'src/kafka/kafka.service';
 
 @Controller('events/:eventId/participants')
 export class ParticipantsController {
-  constructor(private readonly participantsService: ParticipantsService) {}
+  constructor(
+    private readonly participantsService: ParticipantsService,
+    private readonly kafkaService: KafkaService,
+  ) {}
 
   @Post()
   @HttpCode(201)
@@ -16,6 +20,10 @@ export class ParticipantsController {
     @Body() addParticipantDto: AddParticipantDto
   ) {
     const event = await this.participantsService.create(params.eventId, addParticipantDto);
+    await this.kafkaService.sendMessage('participants.add', {
+      params,
+      body: addParticipantDto,
+    });
     return event;
   }
 
@@ -23,6 +31,7 @@ export class ParticipantsController {
   @HttpCode(204)
   async remove(@Param() params: EventUserIdParamDto): Promise<void> {
     await this.participantsService.remove(params.eventId, params.userId);
+    await this.kafkaService.sendMessage('participants.delete', params);
   }
 
   @MessagePattern('participants.add')
