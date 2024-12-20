@@ -1,0 +1,326 @@
+openapi: 3.0.0
+info:
+  title: 2i-vents
+  description: Event creation API for 2i-vents
+  version: 0.1.0
+servers:
+  - url: http://localhost:3000/
+paths:
+  /events:
+    get:
+      summary: Get all events
+      operationId: getAllEvents
+      responses:
+        '200':
+          description: A list of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+    post:
+      summary: Create a new event
+      operationId: createEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewEvent'
+      responses:
+        '201':
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+
+  /events/{eventId}:
+    get:
+      summary: Get an event by ID
+      operationId: getEventById
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the event to retrieve
+      responses:
+        '200':
+          description: The event details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Event not found
+    put:
+      summary: Update an event
+      operationId: updateEvent
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the event to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEvent'
+      responses:
+        '200':
+          description: Event updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Event not found
+    delete:
+      summary: Delete an event
+      operationId: deleteEvent
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the event to delete
+      responses:
+        '204':
+          description: Event deleted successfully
+        '404':
+          description: Event not found
+
+  /events/{eventId}/participants:
+    post:
+      summary: Add a participant to an event
+      operationId: addParticipant
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the event to add a participant to
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Participant'
+      responses:
+        '201':
+          description: Participant added successfully
+        '404':
+          description: Event not found
+
+  /events/{eventId}/participants/{userId}:
+    delete:
+      summary: Delete a participant from an event
+      operationId: deleteParticipant
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the event
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The user ID of the participant to delete
+      responses:
+        '204':
+          description: Participant deleted successfully
+        '404':
+          description: Event or participant not found
+
+  /events/{eventId}/organizers:
+    post:
+      summary: Add an organizer to an event
+      operationId: addOrganizer
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the event to add an organizer to
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organizer'
+      responses:
+        '201':
+          description: Organizer added successfully
+        '404':
+          description: Event not found
+
+  /events/{eventId}/organizers/{userId}:
+    delete:
+      summary: Delete an organizer from an event
+      operationId: deleteOrganizer
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the event
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The user ID of the organizer to delete
+      responses:
+        '204':
+          description: Organizer deleted successfully
+        '404':
+          description: Event or organizer not found
+
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        participants:
+          type: array
+          items:
+            type: string
+        organizers:
+          type: array
+          items:
+            type: string
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        themes:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - name
+        - description
+        - address
+        - participants
+        - organizers
+        - date
+        - time
+        - themes
+
+    NewEvent:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        organizers:
+          type: array
+          items:
+            type: string
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        themes:
+          type: array
+          items:
+            type: string
+      required:
+        - name
+        - description
+        - address
+        - date
+        - time
+        - themes
+
+    UpdateEvent:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        themes:
+          type: array
+          items:
+            type: string
+
+    Organizer:
+      type: object
+      properties:
+        userId:
+          type: string
+      required:
+        - userId
+
+    Participant:
+      type: object
+      properties:
+        userId:
+          type: string
+      required:
+        - userId
+
+    Address:
+      type: object
+      properties:
+        name:
+          type: string
+        city:
+          type: string
+        zipCode:
+          type: string
+        streetName:
+          type: string
+        streetNumber:
+          type: string
+      required:
+        - name
+        - city
+        - zipCode
+        - streetName
+        - streetNumber
