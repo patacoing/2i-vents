@@ -68,9 +68,11 @@ dependencies {
 
     val retrofitVersion = "2.9.0"
     val okHttpVersion = "4.11.0"
+    val compose_version = "1.0.5"
 
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
+    implementation("androidx.compose.material:material-icons-extended:1.7.6")
 
 }
