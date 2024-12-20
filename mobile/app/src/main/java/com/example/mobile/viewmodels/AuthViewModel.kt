@@ -5,11 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mobile.models.AuthResponse
+import com.example.mobile.models.User
 import com.example.mobile.repositories.AuthRepository
-import com.example.mobile.services.LoginRequest
-import com.example.mobile.services.LoginResponse
-import com.example.mobile.services.SignUpRequest
-import com.example.mobile.services.SignUpResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,35 +17,37 @@ class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    var signUpState by mutableStateOf<SignUpResponse?>(null)
+    var authResponse by mutableStateOf<AuthResponse?>(null)
         private set
-
-    var loginState by mutableStateOf<LoginResponse?>(null)
+    var registeredUser by mutableStateOf<User?>(null)
         private set
-
     var isLoading by mutableStateOf(false)
         private set
+    var errorMessage by mutableStateOf<String?>(null)
+        private set
 
-    fun signUp(user: SignUpRequest) {
+    fun login(firstName: String, lastName: String, password: String) {
         viewModelScope.launch {
             isLoading = true
+            errorMessage = null
             try {
-                signUpState = authRepository.signUp(user)
+                authResponse = authRepository.login(firstName, lastName, password)
             } catch (e: Exception) {
-                // Gérer l'erreur
+                errorMessage = e.message
             } finally {
                 isLoading = false
             }
         }
     }
 
-    fun login(creds: LoginRequest) {
+    fun register(firstName: String, lastName: String, promotion: String, password: String) {
         viewModelScope.launch {
             isLoading = true
+            errorMessage = null
             try {
-                loginState = authRepository.login(creds)
+                registeredUser = authRepository.register(firstName, lastName, promotion, password)
             } catch (e: Exception) {
-                // Gérer l'erreur
+                errorMessage = e.message
             } finally {
                 isLoading = false
             }

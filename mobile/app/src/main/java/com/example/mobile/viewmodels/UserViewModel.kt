@@ -5,34 +5,32 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mobile.models.Event
-import com.example.mobile.models.NewEvent
-import com.example.mobile.repositories.EventsRepository
+import com.example.mobile.models.User
+import com.example.mobile.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
-class EventsViewModel @Inject constructor(
-    private val eventsRepository: EventsRepository
+class UserViewModel @Inject constructor(
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
-    var eventsList by mutableStateOf<List<Event>>(emptyList())
+    var users by mutableStateOf<List<User>>(emptyList())
         private set
-    var selectedEvent by mutableStateOf<Event?>(null)
+    var selectedUser by mutableStateOf<User?>(null)
         private set
     var isLoading by mutableStateOf(false)
         private set
     var errorMessage by mutableStateOf<String?>(null)
         private set
 
-    fun loadEvents() {
+    fun loadUsers() {
         viewModelScope.launch {
             isLoading = true
             errorMessage = null
             try {
-                eventsList = eventsRepository.getEvents()
+                users = userRepository.getAllUsers()
             } catch (e: Exception) {
                 errorMessage = e.message
             } finally {
@@ -41,12 +39,12 @@ class EventsViewModel @Inject constructor(
         }
     }
 
-    fun loadEventDetail(id: String) {
+    fun loadUserById(id: String) {
         viewModelScope.launch {
             isLoading = true
             errorMessage = null
             try {
-                selectedEvent = eventsRepository.getEventDetail(id)
+                selectedUser = userRepository.getUserById(id)
             } catch (e: Exception) {
                 errorMessage = e.message
             } finally {
@@ -55,13 +53,13 @@ class EventsViewModel @Inject constructor(
         }
     }
 
-    fun createEvent(newEvent: NewEvent, onCreated: (Event) -> Unit) {
+    fun updateUser(id: String, user: User) {
         viewModelScope.launch {
             isLoading = true
             errorMessage = null
             try {
-                val created = eventsRepository.createEvent(newEvent)
-                onCreated(created)
+                selectedUser = userRepository.updateUser(id, user)
+                // Vous pouvez mettre à jour la liste `users` si besoin.
             } catch (e: Exception) {
                 errorMessage = e.message
             } finally {
@@ -70,5 +68,18 @@ class EventsViewModel @Inject constructor(
         }
     }
 
-    // Ajoutez d'autres fonctions (update, delete, addParticipant, etc.) selon vos besoins.
+    fun deleteUser(id: String) {
+        viewModelScope.launch {
+            isLoading = true
+            errorMessage = null
+            try {
+                userRepository.deleteUser(id)
+                users = users.filter { it.id != id } // Mettre à jour la liste en local
+            } catch (e: Exception) {
+                errorMessage = e.message
+            } finally {
+                isLoading = false
+            }
+        }
+    }
 }

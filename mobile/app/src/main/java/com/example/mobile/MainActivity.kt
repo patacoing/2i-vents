@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
 fun MyAppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.Login.route) {
+    NavHost(navController = navController, startDestination = Screen.SignUp.route) {
         composable(Screen.SignUp.route) {
             val authViewModel = hiltViewModel<AuthViewModel>()
             SignUpScreen(
