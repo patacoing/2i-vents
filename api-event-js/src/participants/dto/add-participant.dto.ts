@@ -4,4 +4,8 @@ export class AddParticipantDto {
   @IsString()
   @IsNotEmpty()
   userId: string;
+
+  public toString(): string {
+    return JSON.stringify(this);
+  }
 }
