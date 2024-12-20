@@ -19,17 +19,6 @@ services:
       ALLOW_ANONYMOUS_LOGIN: yes
       ZOOKEEPER_TICK_TIME: 2000
 
-  kafdrop:
-    image: obsidiandynamics/kafdrop
-    depends_on:
-      - kafka
-    ports:
-      - 9001:9000
-    environment:
-      KAFKA_BROKERCONNECT: kafka:29092
-      JVM_OPTS: "-Xms32M -Xmx64M"
-      SERVER_SERVLET_CONTEXTPATH: "/"
-
   kafka:
     image: wurstmeister/kafka
     ports:

@@ -19,7 +19,7 @@ object EventsNetworkModule {
     @Named("EventsRetrofit")
     fun provideEventsRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://stoplight.io/mocks/ig2i/2i-vents/665341912/")
+            .baseUrl("http://10.0.2.2:3000/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()

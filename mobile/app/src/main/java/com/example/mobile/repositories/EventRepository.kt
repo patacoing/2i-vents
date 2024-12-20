@@ -16,7 +16,7 @@ class EventsRepository @Inject constructor(
     }
 
     suspend fun getEventDetail(id: String): Event {
-        return api.getEventById(id)
+        return api.getAllEvents().find { it -> it._id == id }!!
     }
 
     suspend fun createEvent(newEvent: NewEvent): Event {
