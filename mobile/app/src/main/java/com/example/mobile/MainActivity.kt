@@ -71,7 +71,9 @@ fun MyAppNavigation() {
             val eventId = backStackEntry.arguments?.getString("id") ?: ""
             EventDetailScreen(
                 eventId = eventId,
-                viewModel = eventsViewModel
+                viewModel = eventsViewModel,
+                onBackClick = { navController.navigateUp() } ,
+                onRegisterClick = { /* Implémentez la logique d'inscription */ }
             )
         }
     }
