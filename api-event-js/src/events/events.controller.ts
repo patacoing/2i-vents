@@ -16,7 +16,7 @@ export class EventsController {
   @Post()
   async create(@Body() createEventDto: CreateEventDto) {
     const event = await this.eventsService.create(createEventDto);
-    await this.kafkaService.sendMessage('events.post', createEventDto);
+    await this.kafkaService.sendMessage('java.events.post', createEventDto);
     return event;
   }
 
@@ -33,7 +33,7 @@ export class EventsController {
   @Put(':id')
   async update(@Param() params: EventIdParamDto, @Body() updateEventDto: UpdateEventDto) {
     const updatedEvent = await this.eventsService.update(params.eventId, updateEventDto);
-    await this.kafkaService.sendMessage('events.update', {
+    await this.kafkaService.sendMessage('java.events.update', {
       params,
       body: updateEventDto,
     });
@@ -44,21 +44,21 @@ export class EventsController {
   @HttpCode(204)
   async remove(@Param() params: EventIdParamDto) {
     await this.eventsService.remove(params.eventId);
-    await this.kafkaService.sendMessage('events.delete', params);
+    await this.kafkaService.sendMessage('java.events.delete', params);
   }
 
-  @MessagePattern('events.post')
+  @MessagePattern('js.events.post')
   messageCreate(@Payload() createEventDto: CreateEventDto) {
     return this.eventsService.create(createEventDto);
   }
 
-  @MessagePattern('events.update')
+  @MessagePattern('js.events.update')
   messageUpdate(@Payload() payload: { params: EventIdParamDto; body: UpdateEventDto }) {
     const { params, body } = payload;
     return this.eventsService.update(params.eventId, body);
   }
 
-  @MessagePattern('events.delete')
+  @MessagePattern('js.events.delete')
   async messageRemove(@Payload() params: EventIdParamDto) {
     await this.eventsService.remove(params.eventId);
   }

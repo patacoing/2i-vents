@@ -9,7 +9,7 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
   constructor() {
     this.kafka = new Kafka({
       clientId: 'nestjs-app',
-      brokers: ['localhost:9092'], // Remplacez par vos brokers Kafka
+      brokers: ['localhost:9092'],
     });
 
     this.producer = this.kafka.producer();

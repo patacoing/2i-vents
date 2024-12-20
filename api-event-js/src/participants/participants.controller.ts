@@ -20,7 +20,7 @@ export class ParticipantsController {
     @Body() addParticipantDto: AddParticipantDto
   ) {
     const event = await this.participantsService.create(params.eventId, addParticipantDto);
-    await this.kafkaService.sendMessage('participants.add', {
+    await this.kafkaService.sendMessage('java.participants.add', {
       params,
       body: addParticipantDto,
     });
@@ -31,10 +31,10 @@ export class ParticipantsController {
   @HttpCode(204)
   async remove(@Param() params: EventUserIdParamDto): Promise<void> {
     await this.participantsService.remove(params.eventId, params.userId);
-    await this.kafkaService.sendMessage('participants.delete', params);
+    await this.kafkaService.sendMessage('java.participants.delete', params);
   }
 
-  @MessagePattern('participants.add')
+  @MessagePattern('js.participants.add')
   async messageCreate(
     @Payload() payload: { params: EventIdParamDto; body: AddParticipantDto },
   ) {
@@ -43,7 +43,7 @@ export class ParticipantsController {
     return event;
   }
 
-  @MessagePattern('participants.delete')
+  @MessagePattern('js.participants.delete')
   async messageRemove(@Payload() params: EventUserIdParamDto): Promise<void> {
     await this.participantsService.remove(params.eventId, params.userId);
   }
