@@ -2,7 +2,8 @@ import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode } from '@nest
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
-import { IdParamDto } from 'src/events/dto/id-param.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EventIdParamDto } from 'src/common/dto/event-id-param.dto';
 
 @Controller('events')
 export class EventsController {
@@ -19,19 +20,35 @@ export class EventsController {
   }
 
   @Get(':id')
-  findOne(@Param() params: IdParamDto) {
-    return this.eventsService.findOne(params.id);
+  findOne(@Param() params: EventIdParamDto) {
+    return this.eventsService.findOne(params.eventId);
   }
 
   @Put(':id')
-  update(@Param() params: IdParamDto, @Body() updateEventDto: UpdateEventDto) {
-    return this.eventsService.update(params.id, updateEventDto);
+  update(@Param() params: EventIdParamDto, @Body() updateEventDto: UpdateEventDto) {
+    return this.eventsService.update(params.eventId, updateEventDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param() params: IdParamDto) {
-    await this.eventsService.remove(params.id);
+  async remove(@Param() params: EventIdParamDto) {
+    await this.eventsService.remove(params.eventId);
+  }
+
+  @MessagePattern('events.post')
+  messageCreate(@Payload() createEventDto: CreateEventDto) {
+    return this.eventsService.create(createEventDto);
+  }
+
+  @MessagePattern('events.update')
+  messageUpdate(@Payload() payload: { params: EventIdParamDto; body: UpdateEventDto }) {
+    const { params, body } = payload;
+    return this.eventsService.update(params.eventId, body);
+  }
+
+  @MessagePattern('events.delete')
+  async messageRemove(@Payload() params: EventIdParamDto) {
+    await this.eventsService.remove(params.eventId);
   }
 
 }
