@@ -20,7 +20,7 @@ export class OrganizersController {
     @Body() addOrganizerDto: AddOrganizerDto
   ) {
     const event = await this.organizersService.create(params.eventId, addOrganizerDto);
-    await this.kafkaService.sendMessage('organizers.add', {
+    await this.kafkaService.sendMessage('java.organizers.add', {
       params,
       body: addOrganizerDto,
     });
@@ -31,10 +31,10 @@ export class OrganizersController {
   @HttpCode(204)
   async remove(@Param() params: EventUserIdParamDto): Promise<void> {
     await this.organizersService.remove(params.eventId, params.userId);
-    await this.kafkaService.sendMessage('organizers.delete', params);
+    await this.kafkaService.sendMessage('java.organizers.delete', params);
   }
 
-  @MessagePattern('organizers.add')
+  @MessagePattern('js.organizers.add')
   async messageCreate(
     @Payload() payload: { params: EventIdParamDto; body: AddOrganizerDto },
   ) {
@@ -43,7 +43,7 @@ export class OrganizersController {
     return event;
   }
 
-  @MessagePattern('organizers.delete')
+  @MessagePattern('js.organizers.delete')
   async messageRemove(@Payload() params: EventUserIdParamDto): Promise<void> {
     await this.organizersService.remove(params.eventId, params.userId);
   }
