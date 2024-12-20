@@ -3,45 +3,71 @@ package com.example.mobile
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.mobile.ui.theme.MobileTheme
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.mobile.screens.LoginScreen
+import com.example.mobile.screens.Screen
+import com.example.mobile.screens.SignUpScreen
+import com.example.mobile.viewmodels.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            MobileTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            MyAppNavigation()
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun MyAppNavigation() {
+    val navController = rememberNavController()
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MobileTheme {
-        Greeting("Android")
+    NavHost(navController = navController, startDestination = Screen.Login.route) {
+        composable(Screen.SignUp.route) {
+            val authViewModel = hiltViewModel<AuthViewModel>()
+            SignUpScreen(
+                onSignUpSuccess = {
+                    navController.navigate(Screen.Login.route)
+                },
+                viewModel = authViewModel
+            )
+        }
+
+        composable(Screen.Login.route) {
+            val authViewModel = hiltViewModel<AuthViewModel>()
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(Screen.EventsList.route)
+                },
+                viewModel = authViewModel
+            )
+        }
+
+//        composable(Screen.EventsList.route) {
+//            val eventsViewModel = hiltViewModel<EventsViewModel>()
+//            EventsListScreen(
+//                onEventSelected = { eventId ->
+//                    navController.navigate(Screen.EventDetail.createRoute(eventId))
+//                },
+//                viewModel = eventsViewModel
+//            )
+//        }
+//
+//        composable(Screen.EventDetail.route,
+//            arguments = listOf(navArgument("id") { type = NavType.StringType })
+//        ) { backStackEntry ->
+//            val eventsViewModel = hiltViewModel<EventsViewModel>()
+//            val eventId = backStackEntry.arguments?.getString("id") ?: ""
+//            EventDetailScreen(
+//                eventId = eventId,
+//                viewModel = eventsViewModel
+//            )
+//        }
     }
 }
