@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateParticipantDto } from './dto/create-participant.dto';
+import { AddParticipantDto } from './dto/add-participant.dto';
 import { UpdateParticipantDto } from './dto/update-participant.dto';
 
 @Injectable()
 export class ParticipantsService {
-  create(createParticipantDto: CreateParticipantDto) {
+  create(createParticipantDto: AddParticipantDto) {
     return 'This action adds a new participant';
   }
 
