@@ -1,6 +1,10 @@
 import { IsMongoId } from 'class-validator';
 
-export class IdParamDto {
+export class IdEventParamDto {
   @IsMongoId()
-  id: string;
+  idEvent: string;
+
+  public toString(): string {
+    return JSON.stringify(this);
+  }
 }

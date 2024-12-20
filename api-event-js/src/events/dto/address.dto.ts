@@ -20,4 +20,8 @@ export class AddressDto {
   @IsString()
   @IsNotEmpty()
   streetNumber: string;
+
+  public toString(): string {
+    return JSON.stringify(this);
+  }
 }

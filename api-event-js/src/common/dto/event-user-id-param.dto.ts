@@ -8,4 +8,8 @@ export class EventUserIdParamDto {
   @IsString()
   @IsNotEmpty()
   userId: string;
+
+  public toString(): string {
+    return JSON.stringify(this);
+  }
 }

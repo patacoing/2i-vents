@@ -7,9 +7,15 @@ import { OrganizersModule } from './organizers/organizers.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Address } from './events/entities/address.embedded';
 import { EventEntity } from './events/entities/event.entity';
+import { KafkaModule } from './kafka/kafka.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    KafkaModule,
     TypeOrmModule.forRoot({
       type: 'mongodb',
       url: 'mongodb://admin:admin@localhost:27017',

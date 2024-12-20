@@ -27,4 +27,8 @@ export class CreateEventDto {
   @IsArray()
   @IsNotEmpty()
   themes: string[];
+
+  public toString(): string {
+    return JSON.stringify(this);
+  }
 }
