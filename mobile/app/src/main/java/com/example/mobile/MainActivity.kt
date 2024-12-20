@@ -5,13 +5,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.mobile.screens.EventDetailScreen
+import com.example.mobile.screens.EventsListScreen
 import com.example.mobile.screens.LoginScreen
 import com.example.mobile.screens.Screen
 import com.example.mobile.screens.SignUpScreen
 import com.example.mobile.viewmodels.AuthViewModel
+import com.example.mobile.viewmodels.EventsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,25 +54,25 @@ fun MyAppNavigation() {
             )
         }
 
-//        composable(Screen.EventsList.route) {
-//            val eventsViewModel = hiltViewModel<EventsViewModel>()
-//            EventsListScreen(
-//                onEventSelected = { eventId ->
-//                    navController.navigate(Screen.EventDetail.createRoute(eventId))
-//                },
-//                viewModel = eventsViewModel
-//            )
-//        }
-//
-//        composable(Screen.EventDetail.route,
-//            arguments = listOf(navArgument("id") { type = NavType.StringType })
-//        ) { backStackEntry ->
-//            val eventsViewModel = hiltViewModel<EventsViewModel>()
-//            val eventId = backStackEntry.arguments?.getString("id") ?: ""
-//            EventDetailScreen(
-//                eventId = eventId,
-//                viewModel = eventsViewModel
-//            )
-//        }
+        composable(Screen.EventsList.route) {
+            val eventsViewModel = hiltViewModel<EventsViewModel>()
+            EventsListScreen(
+                onEventSelected = { eventId ->
+                    navController.navigate(Screen.EventDetail.createRoute(eventId))
+                },
+                viewModel = eventsViewModel
+            )
+        }
+
+        composable(Screen.EventDetail.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val eventsViewModel = hiltViewModel<EventsViewModel>()
+            val eventId = backStackEntry.arguments?.getString("id") ?: ""
+            EventDetailScreen(
+                eventId = eventId,
+                viewModel = eventsViewModel
+            )
+        }
     }
 }

@@ -10,7 +10,5 @@ class UserRepository @Inject constructor(
     suspend fun getAllUsers(): List<User> = userApi.getAllUsers()
     suspend fun getUserById(id: String): User = userApi.getUserById(id)
     suspend fun updateUser(id: String, user: User): User = userApi.updateUser(id, user)
-    suspend fun deleteUser(id: String) {
-        userApi.deleteUser(id)
-    }
+    suspend fun deleteUser(id: String) = userApi.deleteUser(id)
 }
