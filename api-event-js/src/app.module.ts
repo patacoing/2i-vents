@@ -10,9 +10,6 @@ import { EventEntity } from './events/entities/event.entity';
 
 @Module({
   imports: [
-    EventsModule,
-    ParticipantsModule,
-    OrganizersModule,
     TypeOrmModule.forRoot({
       type: 'mongodb',
       url: 'mongodb://admin:admin@localhost:27017',
@@ -23,6 +20,9 @@ import { EventEntity } from './events/entities/event.entity';
       entities: [EventEntity, Address],
     }),
     TypeOrmModule.forFeature([EventEntity, Address]),
+    EventsModule,
+    ParticipantsModule,
+    OrganizersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

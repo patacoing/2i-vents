@@ -1,7 +1,7 @@
-import { IsNumber, IsNotEmpty } from 'class-validator';
+import { IsNumber, IsNotEmpty, IsMongoId, IsString } from 'class-validator';
 
 export class AddParticipantDto {
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  userId: number;
+  userId: string;
 }

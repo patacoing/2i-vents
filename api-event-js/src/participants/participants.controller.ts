@@ -1,20 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Delete, Body, Param, HttpCode } from '@nestjs/common';
 import { ParticipantsService } from './participants.service';
 import { AddParticipantDto } from './dto/add-participant.dto';
-import { UpdateParticipantDto } from './dto/update-participant.dto';
-import { IdParamDto } from 'src/common/dto/id-param.dto';
+import { EventIdParamDto } from 'src/common/dto/event-id-param.dto';
+import { EventUserIdParamDto } from 'src/common/dto/event-user-id-param.dto';
 
-@Controller('participants')
+@Controller('events/:eventId/participants')
 export class ParticipantsController {
   constructor(private readonly participantsService: ParticipantsService) {}
 
   @Post()
-  create(@Body() AddParticipantDto: AddParticipantDto) {
-    return this.participantsService.create(AddParticipantDto);
+  @HttpCode(201)
+  async create(
+    @Param() params: EventIdParamDto, 
+    @Body() addParticipantDto: AddParticipantDto
+  ) {
+    const event = await this.participantsService.create(params.eventId, addParticipantDto);
+    return event;
   }
 
-  @Delete(':id')
-  findOne(@Param() params: IdParamDto) {
-    return this.participantsService.remove(params.id);
+  @Delete(':userId')
+  @HttpCode(204)
+  async remove(@Param() params: EventUserIdParamDto): Promise<void> {
+    await this.participantsService.remove(params.eventId, params.userId);
   }
 }
