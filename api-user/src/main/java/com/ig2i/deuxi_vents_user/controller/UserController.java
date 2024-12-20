@@ -31,6 +31,14 @@ public class UserController {
         return users;
     }
 
+    @GetMapping("/{id}")
+    public UserDto getUser(@PathVariable String id) {
+        User user = userService.findUserById(id);
+        return new UserDto(
+                user.getId(), user.getFirstName(), user.getLastName(), user.getPromo(), user.getPassword(), user.getRole().name()
+        );
+    }
+
 
     @PutMapping("/{id}")
     public UserDto updateUser(@PathVariable String id,

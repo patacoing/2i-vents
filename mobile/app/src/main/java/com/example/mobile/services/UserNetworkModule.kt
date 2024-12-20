@@ -19,7 +19,7 @@ object UserNetworkModule {
     @Named("UserRetrofit")
     fun provideUserRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://virtserver.swaggerhub.com/MOLANTOINEPROMAIL/user-api/1.0.0/")
+            .baseUrl("http://10.0.2.2:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()

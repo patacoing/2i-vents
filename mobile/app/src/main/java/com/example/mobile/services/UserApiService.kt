@@ -15,7 +15,7 @@ import retrofit2.http.Path
 interface UserApiService {
 
     // Utilisateurs
-    @GET("users")
+    @GET("users/")
     suspend fun getAllUsers(): List<User>
 
     @GET("users/{id}")
@@ -31,6 +31,6 @@ interface UserApiService {
     @POST("auth/login")
     suspend fun login(@Body loginBody: AuthLoginBody): AuthResponse
 
-    @POST("auth/register")
+    @POST("auth/signup")
     suspend fun register(@Body registerBody: AuthRegisterBody): User
 }

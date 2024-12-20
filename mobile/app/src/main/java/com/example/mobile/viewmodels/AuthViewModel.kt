@@ -37,7 +37,7 @@ class AuthViewModel @Inject constructor(
                 authResponse = authRepository.login(firstName, lastName, password)
                 SessionManager.access_token = authResponse!!.accessToken
                 SessionManager.refresh_token = authResponse!!.refreshToken
-                SessionManager.currentUser = userRepository.getUserById(authResponse!!.userId.toString())
+                SessionManager.currentUser = userRepository.getUserById(authResponse!!.iduser)
             } catch (e: Exception) {
                 errorMessage = e.message
             } finally {

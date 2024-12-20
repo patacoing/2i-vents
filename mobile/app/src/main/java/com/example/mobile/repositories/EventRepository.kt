@@ -31,7 +31,7 @@ class EventsRepository @Inject constructor(
         api.deleteEvent(eventId)
     }
 
-    suspend fun addParticipant(eventId: String, userId: Int) {
+    suspend fun addParticipant(eventId: String, userId: String) {
         api.addParticipant(eventId, Participant(userId))
     }
 
@@ -39,7 +39,7 @@ class EventsRepository @Inject constructor(
         api.deleteParticipant(eventId, userId)
     }
 
-    suspend fun addOrganizer(eventId: String, userId: Int) {
+    suspend fun addOrganizer(eventId: String, userId: String) {
         api.addOrganizer(eventId, Organizer(userId))
     }
 

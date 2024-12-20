@@ -40,9 +40,9 @@ data class UpdateEvent(
 )
 
 data class Participant(
-    val userId: Int
+    val userId: String
 )
 
 data class Organizer(
-    val userId: Int
+    val userId: String
 )

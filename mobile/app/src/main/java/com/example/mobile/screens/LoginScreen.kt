@@ -147,7 +147,7 @@ fun LoginScreen(
     }
 
     LaunchedEffect(authResponse) {
-        authResponse?.userId?.let {
+        authResponse?.iduser?.let {
             onLoginSuccess()
         }
     }

@@ -16,14 +16,14 @@ data class AuthLoginBody(
 )
 
 data class AuthRegisterBody(
-    val firstname: String,
-    val lastname: String,
-    val promotion: String,
+    val firstName: String,
+    val lastName: String,
+    val promo: String,
     val password: String
 )
 
 data class AuthResponse(
     val accessToken: String,
     val refreshToken: String,
-    val userId: Int
+    val iduser: String
 )

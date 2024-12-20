@@ -85,7 +85,7 @@ class EventsViewModel @Inject constructor(
             isLoading = true
             errorMessage = null
             try {
-                eventsRepository.addParticipant(eventId, userId.toInt())
+                eventsRepository.addParticipant(eventId, userId)
                 loadEventDetail(eventId)  // Mettre à jour l'event courant
             } catch (e: Exception) {
                 errorMessage = e.message

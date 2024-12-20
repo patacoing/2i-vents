@@ -1,9 +1,12 @@
 package com.ig2i.deuxi_vents_user.config;
 
 import com.ig2i.deuxi_vents_user.repository.UserRepository;
+import com.mongodb.reactivestreams.client.MongoClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
