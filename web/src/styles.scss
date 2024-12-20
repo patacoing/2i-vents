@@ -1,7 +1,5 @@
 @import '@angular/cdk/overlay-prebuilt.css';
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "primeicons/primeicons.css";
 
 /* You can add global styles to this file, and also import other style files */
 
@@ -55,11 +53,4 @@ color-scheme: light;
 --input: 240 3.7% 15.9%;
 --ring: 142.4 71.8% 29.2%;
 color-scheme: dark;
-}
-
-
-@layer base {
-* {
-@apply border-border;
-}
 }
